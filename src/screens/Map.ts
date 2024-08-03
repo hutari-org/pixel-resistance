@@ -1,4 +1,4 @@
-import { IBackgroundModel, IModel } from "src/types/model.interface";
+import { IBackgroundModel } from "src/types/model.interface";
 
 export default class Map {
   /**
