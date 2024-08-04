@@ -2,8 +2,8 @@ import { IModel } from "src/types/model.interface";
 
 export default class Play {
   static renderer: Play;
-  drawQueue: { [key: string]: IModel } = {};
-  updateQueue: { [key: string]: IModel } = {};
+  drawQueue: Array<{ key: string; c: IModel }> = [];
+  updateQueue: Array<{ key: string; c: IModel }> = [];
 
   static getInstance(ctx: CanvasRenderingContext2D, canvas: HTMLCanvasElement) {
     if (!this.renderer) {
@@ -13,11 +13,17 @@ export default class Play {
   }
 
   registerDrawQueue(key: string, c: IModel) {
-    Play.renderer.drawQueue[key] = c;
+    Play.renderer.drawQueue.push({ key, c });
+    Play.renderer.drawQueue.sort((a, b) => {
+      return a.c.zIndex - b.c.zIndex;
+    });
   }
 
   registerUpdateQueue(key: string, c: IModel) {
-    Play.renderer.updateQueue[key] = c;
+    Play.renderer.updateQueue.push({ key, c });
+    Play.renderer.updateQueue.sort((a, b) => {
+      return a.c.zIndex - b.c.zIndex;
+    });
   }
 
   draw() {
@@ -28,12 +34,12 @@ export default class Play {
       Play.renderer.canvas.height
     );
 
-    Object.keys(Play.renderer.updateQueue).forEach((v, i) => {
-      Play.renderer.updateQueue[v].update();
+    Play.renderer.updateQueue.forEach((v) => {
+      v.c.update();
     });
 
-    Object.keys(Play.renderer.drawQueue).forEach((v, i) => {
-      Play.renderer.drawQueue[v].draw();
+    Play.renderer.drawQueue.forEach((v) => {
+      v.c.draw();
     });
 
     window.requestAnimationFrame(Play.renderer.draw);

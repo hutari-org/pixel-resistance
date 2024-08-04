@@ -1,6 +1,7 @@
 import { IModel } from "src/types/model.interface";
 import { loadImage } from "../../util/common";
 import PlayerInputController from "./PlayerInputController";
+import { createEvent } from "../../util/event";
 
 class Player implements IModel {
   private model: any;
@@ -10,7 +11,8 @@ class Player implements IModel {
 
   constructor(
     private ctx: CanvasRenderingContext2D,
-    private canvas: HTMLCanvasElement
+    private canvas: HTMLCanvasElement,
+    public zIndex: number
   ) {
     this.position = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
     this.inputController = PlayerInputController.getInstance();
@@ -23,25 +25,28 @@ class Player implements IModel {
 
   update() {
     const inputMap = this.inputController.getInputMap();
+    const moveCoord = { x: 0, y: 0 };
+
     if (inputMap["ArrowUp"]) {
       this.position.y -= 10;
-      this.ctx.translate(0, 10);
+      moveCoord.y += 10;
     }
 
     if (inputMap["ArrowDown"]) {
       this.position.y += 10;
-      this.ctx.translate(0, -10);
+      moveCoord.y -= 10;
     }
 
     if (inputMap["ArrowLeft"]) {
       this.position.x -= 10;
-      this.ctx.translate(10, 0);
+      moveCoord.x += 10;
     }
 
     if (inputMap["ArrowRight"]) {
       this.position.x += 10;
-      this.ctx.translate(-10, 0);
+      moveCoord.x -= 10;
     }
+    this.ctx.translate(moveCoord.x, moveCoord.y);
   }
 }
 
