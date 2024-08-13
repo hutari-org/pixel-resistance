@@ -28,10 +28,10 @@ export default class Play {
 
   draw() {
     Play.renderer.ctx.clearRect(
-      0,
-      0,
-      Play.renderer.canvas.width,
-      Play.renderer.canvas.height
+      -Play.renderer.canvas.width,
+      -Play.renderer.canvas.height,
+      Play.renderer.canvas.width * 3,
+      Play.renderer.canvas.height * 3
     );
 
     Play.renderer.updateQueue.forEach((v) => {
