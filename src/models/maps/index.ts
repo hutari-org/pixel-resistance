@@ -41,8 +41,8 @@ export default class TestMap extends BaseMap implements IModel {
 
     MapConst.COLISIONMAP.forEach((v, i) => {
       const obj = MapConst.COLISIONS[v]?.obj;
-      const x = 64 * (i % 30);
-      const y = 64 * Math.floor(i / 30);
+      const x = this.startPosition.x + 64 * (i % 30);
+      const y = this.startPosition.y + 64 * Math.floor(i / 30);
 
       if (!this.cachedObj[i] && obj) {
         this.cachedObj[i] = new obj(this.ctx, this.canvas, this.zIndex, { x, y });
