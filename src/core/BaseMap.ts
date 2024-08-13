@@ -31,7 +31,7 @@ export default class BaseMap {
     protected ctx: CanvasRenderingContext2D,
     protected canvas: HTMLCanvasElement,
     protected position: IPosition,
-    protected MapConst: IMapConst
+    public MapConst: IMapConst
   ) {
     this.allTilesLoaded = new Promise((resolve) => {
       this._resolveLoad = resolve;
@@ -44,6 +44,16 @@ export default class BaseMap {
 
       window.addEventListener(eventKey, this._tileLoadEventHandler.bind(this));
     });
+  }
+
+  public getMapInfo() {
+    return {
+      map: this,
+      startX: this.position.x,
+      startY: this.position.y,
+      endX: this.position.x + 1920,
+      endY: this.position.y + 1080,
+    };
   }
 
   /**

@@ -5,6 +5,7 @@ import { IPosition } from "src/types/object.interface";
 
 export default class TestMap extends BaseMap implements IModel {
   cached: boolean = false;
+  cachedObj: any = {};
   /**
    * TestMap 클래스의 생성자
    *
@@ -16,7 +17,7 @@ export default class TestMap extends BaseMap implements IModel {
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
     public zIndex: number,
-    startPosition: IPosition
+    public startPosition: IPosition
   ) {
     super(ctx, canvas, startPosition, MapConst);
   }
@@ -36,6 +37,19 @@ export default class TestMap extends BaseMap implements IModel {
       const y = 64 * Math.floor(i / 30);
 
       this.ctx.drawImage(this.cachedTile[src], x, y, 64, 64);
+    });
+
+    MapConst.COLISIONMAP.forEach((v, i) => {
+      const obj = MapConst.COLISIONS[v]?.obj;
+      const x = this.startPosition.x + 64 * (i % 30);
+      const y = this.startPosition.y + 64 * Math.floor(i / 30);
+
+      if (!this.cachedObj[i] && obj) {
+        this.cachedObj[i] = new obj(this.ctx, this.canvas, this.zIndex, { x, y });
+      }
+      if (this.cachedObj[i]) {
+        this.cachedObj[i].draw();
+      }
     });
   }
 }
