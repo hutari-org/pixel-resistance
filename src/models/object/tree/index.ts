@@ -11,6 +11,7 @@ export default class Tree extends BaseModel implements IModel {
     ctx: CanvasRenderingContext2D,
     canvas: HTMLCanvasElement,
     public zIndex: number,
+    public key: string,
     position: { x: number; y: number }
   ) {
     super(ctx, canvas, position);
@@ -24,4 +25,8 @@ export default class Tree extends BaseModel implements IModel {
   update() {}
 
   detectAttacked() {}
+
+  getObjectId() {
+    return this.key;
+  }
 }

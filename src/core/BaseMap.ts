@@ -9,6 +9,8 @@ export default class BaseMap {
    */
   public cachedTile: { [key: string]: HTMLImageElement } = {};
 
+  public cachedObj: any = {};
+
   /**
    * 모든 타일이 로드된 후에 resolve되는 프로미스.
    * @type {Promise<void>}
@@ -55,7 +57,16 @@ export default class BaseMap {
       endY: this.position.y + 1080,
     };
   }
+  protected generateUUID(): string {
+    const template = "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx";
 
+    return template.replace(/[xy]/g, (c) => {
+      const r = crypto.getRandomValues(new Uint8Array(1))[0] & 15;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+
+      return v.toString(16);
+    });
+  }
   /**
    * 타일 이미지 로드 이벤트 핸들러
    * 이미지가 전부 로드 됐으면 resolve해준다.

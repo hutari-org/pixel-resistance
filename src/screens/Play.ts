@@ -34,12 +34,12 @@ export default class Play {
       Play.renderer.canvas.height * 3
     );
 
-    Play.renderer.updateQueue.forEach((v) => {
-      v.c.update();
-    });
-
     Play.renderer.drawQueue.forEach((v) => {
       v.c.draw();
+    });
+
+    Play.renderer.updateQueue.forEach((v) => {
+      v.c.update();
     });
 
     window.requestAnimationFrame(Play.renderer.draw);
