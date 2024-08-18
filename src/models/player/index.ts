@@ -113,10 +113,14 @@ class Player implements IModel {
       const startAngle = angle * (Math.PI / 180) - fanAngle / 2;
       const endAngle = angle * (Math.PI / 180) + fanAngle / 2;
 
-      const a = this.detectColistionArc(map, currentPosition, {
+      const colisionEvent = this.detectColisionArc(map, currentPosition, {
         distance: 100,
         startAngle,
         endAngle,
+      });
+
+      colisionEvent.forEach((event: any) => {
+        event(30);
       });
 
       // 공격 범위 시각화
@@ -129,13 +133,13 @@ class Player implements IModel {
     }
   }
 
-  private detectColistionArc(
+  private detectColisionArc(
     map: null | BaseMap,
     originPos: IPosition,
     options: any
-  ): Array<string> {
+  ): Array<any> {
     if (!map) return [];
-    const detectedObject: Array<string> = [];
+    const detectedEvent: Array<any> = [];
     map.MapConst.COLISIONMAP.forEach((v, i) => {
       if (v != 0) {
         const x = 64 * (i % 30);
@@ -158,12 +162,13 @@ class Player implements IModel {
         );
 
         if (isDetected) {
-          detectedObject.push(map.cachedObj[i].getObjectId());
+          const obj = map.cachedObj[i];
+          detectedEvent.push(obj.triggerAttackEvent.bind(obj));
         }
       }
     });
 
-    return detectedObject;
+    return detectedEvent;
   }
 
   private convertMousePositionToCanvas(mousePosition: IPosition) {

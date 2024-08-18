@@ -1,11 +1,12 @@
 import { IModel } from "src/types/model.interface";
 import BaseModel from "../../../core/BaseModel";
 import { loadImage } from "../../../util/common";
+import { createCustomEvent, createEvent } from "../../../util/event";
 
 export default class Tree extends BaseModel implements IModel {
   private model: HTMLImageElement;
 
-  HP: number = 150;
+  public HP: number = 150;
 
   constructor(
     ctx: CanvasRenderingContext2D,
@@ -16,17 +17,22 @@ export default class Tree extends BaseModel implements IModel {
   ) {
     super(ctx, canvas, position);
     this.model = loadImage("src/assets/images/tree.png");
+    window.addEventListener(this.key, this.detectAttacked.bind(this));
   }
 
   draw() {
-    this.ctx.drawImage(this.model, this.position.x, this.position.y, 64, 128);
+    if (this.HP > 0)
+      this.ctx.drawImage(this.model, this.position.x, this.position.y, 64, 128);
   }
 
   update() {}
 
-  detectAttacked() {}
+  detectAttacked(event: CustomEvent) {
+    this.HP = this.HP - parseInt(event.detail.power);
+  }
 
-  getObjectId() {
-    return this.key;
+  triggerAttackEvent(power: number) {
+    const attackEvt = createCustomEvent(this.key, { power: power });
+    dispatchEvent(attackEvt);
   }
 }

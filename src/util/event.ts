@@ -1,4 +1,7 @@
 export const createEvent = (key: string) => {
-  const ev = new Event(key);
-  return ev;
+  return new Event(key);
+};
+
+export const createCustomEvent = (key: string, detail: any) => {
+  return new CustomEvent(key, { detail });
 };
