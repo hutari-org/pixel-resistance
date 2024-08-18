@@ -5,7 +5,6 @@ import { IPosition } from "src/types/object.interface";
 
 export default class TestMap extends BaseMap implements IModel {
   cached: boolean = false;
-  cachedObj: any = {};
   /**
    * TestMap 클래스의 생성자
    *
@@ -45,7 +44,10 @@ export default class TestMap extends BaseMap implements IModel {
       const y = this.startPosition.y + 64 * Math.floor(i / 30);
 
       if (!this.cachedObj[i] && obj) {
-        this.cachedObj[i] = new obj(this.ctx, this.canvas, this.zIndex, { x, y });
+        this.cachedObj[i] = new obj(this.ctx, this.canvas, this.zIndex, this.generateUUID(), {
+          x,
+          y,
+        });
       }
       if (this.cachedObj[i]) {
         this.cachedObj[i].draw();
