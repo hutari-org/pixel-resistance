@@ -3,11 +3,15 @@ import { loadImage } from "../../util/common";
 import PlayerInputController from "./PlayerInputController";
 import BaseMap from "../../core/BaseMap";
 import { IPosition } from "src/types/object.interface";
+import Inventory from "./inventory";
 
 class Player implements IModel {
   private model: any;
   private speed: number = 5;
+  private inventory: Inventory;
+  private tabPandding: boolean = false;
 
+  static isOpenInventory: boolean = false;
   position: IPosition;
   inputController: PlayerInputController;
 
@@ -19,17 +23,26 @@ class Player implements IModel {
   ) {
     this.position = { x: this.canvas.width / 2, y: this.canvas.height / 2 };
     this.inputController = PlayerInputController.getInstance();
+    this.inventory = new Inventory(ctx, canvas);
     this.model = loadImage("src/assets/images/player.png");
   }
 
   draw() {
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(0, 0, 64, 64);
-    this.ctx.drawImage(this.model, this.position.x, this.position.y, 64, 64);
+    if (Player.isOpenInventory) {
+      this.detectToggleInventory();
+
+      this.inventory.draw(this.position);
+      this.inventory.update();
+    } else {
+      this.ctx.drawImage(this.model, this.position.x, this.position.y, 64, 64);
+    }
   }
 
   update() {
     const inputMap = this.inputController.getInputMap();
+
+    this.detectToggleInventory();
+
     const moveCoord = { x: 0, y: 0 };
     let newCoord = { x: this.position.x, y: this.position.y };
 
@@ -222,6 +235,15 @@ class Player implements IModel {
       return angleToPoint >= startAngle && angleToPoint <= endAngle;
     } else {
       return angleToPoint >= startAngle || angleToPoint <= endAngle;
+    }
+  }
+
+  private detectToggleInventory() {
+    const inputMap = this.inputController.getInputMap();
+    if (!inputMap["Tab"]) this.tabPandding = false;
+    if (inputMap["Tab"] && !this.tabPandding) {
+      this.tabPandding = true;
+      Player.isOpenInventory = !Player.isOpenInventory;
     }
   }
 }

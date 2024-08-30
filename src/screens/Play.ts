@@ -1,3 +1,4 @@
+import Player from "../models/player";
 import { IModel } from "src/types/model.interface";
 
 export default class Play {
@@ -38,9 +39,11 @@ export default class Play {
       v.c.draw();
     });
 
-    Play.renderer.updateQueue.forEach((v) => {
-      v.c.update();
-    });
+    if (!Player.isOpenInventory) {
+      Play.renderer.updateQueue.forEach((v) => {
+        v.c.update();
+      });
+    }
 
     window.requestAnimationFrame(Play.renderer.draw);
   }
