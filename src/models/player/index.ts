@@ -8,6 +8,7 @@ class Player implements IModel {
   private model: any;
   private speed: number = 5;
 
+  static isOpenInventory: boolean = false;
   position: IPosition;
   inputController: PlayerInputController;
 
@@ -23,13 +24,12 @@ class Player implements IModel {
   }
 
   draw() {
-    this.ctx.fillStyle = "red";
-    this.ctx.fillRect(0, 0, 64, 64);
     this.ctx.drawImage(this.model, this.position.x, this.position.y, 64, 64);
   }
 
   update() {
     const inputMap = this.inputController.getInputMap();
+    if (inputMap["Tab"]) Player.isOpenInventory = true;
     const moveCoord = { x: 0, y: 0 };
     let newCoord = { x: this.position.x, y: this.position.y };
 
